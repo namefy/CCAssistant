@@ -1,0 +1,9 @@
+﻿global using JetBrains.Annotations;
+global using Volo.Abp;
+global using Volo.Abp.Domain.Entities.Auditing;
+global using Volo.Abp.Domain.Services;
+global using Volo.Abp.Domain.Repositories;
+global using Volo.Abp.Specifications;
+global using System.Linq.Expressions;
+global using Volo.Abp.Domain.Entities;
+global using Microsoft.EntityFrameworkCore;

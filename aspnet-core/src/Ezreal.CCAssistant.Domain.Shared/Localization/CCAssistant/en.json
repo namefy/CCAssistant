@@ -1,0 +1,13 @@
+{
+  "culture": "en",
+  "texts": {
+    "Menu:Home": "Home",
+    "Welcome": "Welcome",
+    "LongWelcomeMessage": "Welcome to the application. This is a startup project based on the ABP framework. For more information, visit abp.io.",
+    "Enum:Gender:Unknown": "Unknown",
+    "Enum:Gender:Male": "Male",
+    "Enum:Gender:Female": "Female",
+    "CCAssistant:Customer:000001": "Customer Phone({phone})Already Exist",
+    "CCAssistant:Customer:000002": "Customer Name({name})Already Exist"
+  }
+}
