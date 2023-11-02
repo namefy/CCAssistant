@@ -4,6 +4,7 @@ using Ezreal.CCAssistant.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Volo.Abp.EntityFrameworkCore;
 
@@ -12,9 +13,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace Ezreal.CCAssistant.Migrations
 {
     [DbContext(typeof(CCAssistantDbContext))]
-    partial class CCAssistantDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231031021939_AddCustomer.LastExpenditureTime")]
+    partial class AddCustomerLastExpenditureTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

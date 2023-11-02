@@ -23,3 +23,7 @@ export default {
     app.provide('i18n', options)
   }
 }
+
+export interface I18N {
+  $t: (str: string) => string
+}

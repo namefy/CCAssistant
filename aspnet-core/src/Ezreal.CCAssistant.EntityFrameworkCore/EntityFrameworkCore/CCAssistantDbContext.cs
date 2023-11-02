@@ -143,6 +143,7 @@ public class CCAssistantDbContext :
             .HasComment("客户手机号码");
 
             b.Property(p => p.Amount)
+            .HasColumnType("decimal(19,2)")
             .HasComment("账户余额");
 
             b.Property(p => p.LastExpenditureTime)

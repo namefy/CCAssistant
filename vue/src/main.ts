@@ -10,6 +10,10 @@ import { useLangStore } from './stores/lang'
 
 import i18n from './plugins/i18n'
 
+import { AuthService } from '@/scripts/AuthService'
+
+const user = await AuthService.GetUser()
+
 const app = createApp(App)
 
 app.use(createPinia())
@@ -22,7 +26,11 @@ const themeStore = useThemeStore()
 const langStore = useLangStore()
 
 router.beforeEach(async (to, from) => {
-  if (to.fullPath == '/') {
+  if (user?.expired) {
+    await AuthService.Login()
+    return false
+  }
+  if (to.path == '/') {
     return { name: 'home', params: { theme: 'light', lang: 'zh-cn' } }
   }
   if (to.params.theme != themeStore.param) {
@@ -31,5 +39,10 @@ router.beforeEach(async (to, from) => {
   if (to.params.lang != langStore.param) {
     langStore.change()
   }
+  window.$loading?.start()
+  setTimeout(() => {
+    window.$loading?.finish()
+  }, 500)
+
   return true
 })

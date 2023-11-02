@@ -6,11 +6,15 @@ export default {
       dark: 'Dark'
     }
   },
-  menu:{
-    home:'Home',
-    customer:{
-        customer:'Customer',
-        customerInfo:'Customer Info'
+  menu: {
+    home: 'Home',
+    customer: {
+      customer: 'Customer',
+      customerInfo: 'Customer Info'
+    },
+    setting: {
+      setting: 'Setting',
+      user:'User'
     }
   }
 }

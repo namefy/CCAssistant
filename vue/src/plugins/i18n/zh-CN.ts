@@ -11,6 +11,10 @@ export default {
     customer: {
       customer: '客户',
       customerInfo:'客户信息'
+    },
+    setting: {
+      setting: '系统',
+      user:'用户'
     }
   }
 }
