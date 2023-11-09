@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
+import { RouterLink, RouterView, useRoute, useRouter, type RouteLocationMatched } from 'vue-router'
 import {
   NConfigProvider,
   NLayout,
@@ -14,11 +14,13 @@ import {
   NButton,
   NImage,
   NMessageProvider,
-  NDialogProvider
+  NDialogProvider,
+  NBreadcrumb,
+  NBreadcrumbItem,
+  NDropdown
 } from 'naive-ui'
-import type { MenuOption } from 'naive-ui'
-import { useThemeStore } from '@/stores/theme'
-import { useLangStore } from '@/stores/lang'
+import type { MenuOption, DropdownOption } from 'naive-ui'
+import { useLangStore, useSizeStore, useThemeStore } from '@/stores'
 import { ref, h, type Component, inject } from 'vue'
 import {
   PersonOutline as PersonIcon,
@@ -40,6 +42,7 @@ const route = useRoute()
 const router = useRouter()
 const themeStore = useThemeStore()
 const langStore = useLangStore()
+const sizeStore = useSizeStore()
 const collapsed = ref(false)
 const activeKey = ref<string | null>(null)
 
@@ -67,9 +70,9 @@ const menuOptions: MenuOption[] = [
     type: 'divider'
   },
   {
-    label: () => i18n.$t('menu:customer:customer'),
+    label: () => i18n.$t('menu:customers:customers'),
     icon: renderIcon(MenuIcon),
-    key: 'menu:customer:customer',
+    key: 'menu:customers:customers',
     children: [
       {
         label: () =>
@@ -77,10 +80,10 @@ const menuOptions: MenuOption[] = [
             RouterLink,
             {
               to: {
-                name: 'customer'
+                name: 'customerInfo'
               }
             },
-            { default: () => i18n.$t('menu:customer:customerInfo') }
+            { default: () => i18n.$t('menu:customers:customerInfo') }
           ),
         key: 'customer',
         icon: renderIcon(PersonIcon)
@@ -88,9 +91,9 @@ const menuOptions: MenuOption[] = [
     ]
   },
   {
-    label: () => i18n.$t('menu:setting:setting'),
+    label: () => i18n.$t('menu:settings:settings'),
     icon: renderIcon(SettingIcon),
-    key: 'menu:setting:setting',
+    key: 'menu:settings:settings',
     children: [
       {
         label: () =>
@@ -101,12 +104,29 @@ const menuOptions: MenuOption[] = [
                 name: 'user'
               }
             },
-            { default: () => i18n.$t('menu:setting:user') }
+            { default: () => i18n.$t('menu:settings:user') }
           ),
         key: 'user',
         icon: renderIcon(UserIcon)
       }
     ]
+  }
+]
+const sizeOptions: DropdownOption[] = [
+  {
+    label: () => i18n.$t('global:size:small'),
+    key: 'small',
+    disabled: sizeStore.size == 'small'
+  },
+  {
+    label: () => i18n.$t('global:size:medium'),
+    key: 'medium',
+    disabled: sizeStore.size == 'medium'
+  },
+  {
+    label: () => i18n.$t('global:size:large'),
+    key: 'large',
+    disabled: sizeStore.size == 'large'
   }
 ]
 
@@ -122,8 +142,24 @@ function themeChange() {
   router.replace({ name: route.name ?? '', params: route.params, force: true })
 }
 
+function sizeChange(key: 'small' | 'medium' | 'large') {
+  sizeStore.change(key)
+  sizeOptions.forEach((o) => {
+    o.disabled = key == o.key
+  })
+}
+
 function logout() {
   AuthService.Logout()
+}
+
+function breadcrumb(routeMatch: RouteLocationMatched, isLast: boolean) {
+  const tmp = routeMatch.path.split('/').slice(3)
+  if (!isLast) {
+    tmp.push(tmp[tmp.length - 1])
+  }
+  const key = tmp.join(':')
+  return i18n.$t(`menu:${key}`)
 }
 </script>
 
@@ -142,44 +178,66 @@ function logout() {
                 <div class="m-head-left">
                   <n-image width="64" src="/doraemon.ico" preview-disabled></n-image>
                 </div>
-                <div class="m-head-center"></div>
+                <div class="m-head-center">
+                  <n-breadcrumb>
+                    <n-breadcrumb-item v-for="(r, i) in route.matched">
+                      {{ breadcrumb(r, i == route.matched.length - 1) }}
+                    </n-breadcrumb-item>
+                  </n-breadcrumb>
+                </div>
                 <div class="m-head-right">
-                  <n-space justify="end">
-                    <n-button quaternary @click="langChange">{{ $t('global:language') }}</n-button>
-                    <n-button quaternary @click="themeChange">{{
+                  <n-space justify="end" :size="sizeStore.size">
+                    <n-button quaternary @click="langChange" :size="sizeStore.size">{{
+                      $t('global:language')
+                    }}</n-button>
+                    <n-button quaternary @click="themeChange" :size="sizeStore.size">{{
                       $t('global:theme:' + themeStore.param)
                     }}</n-button>
+                    <n-dropdown
+                      trigger="hover"
+                      :options="sizeOptions"
+                      @select="sizeChange"
+                      :size="sizeStore.size"
+                    >
+                      <n-button quaternary :size="sizeStore.size">{{
+                        $t('global:size:' + sizeStore.size)
+                      }}</n-button>
+                    </n-dropdown>
                   </n-space>
                 </div>
               </div>
             </n-layout-header>
-            <n-layout-content bordered>
-              <n-layout has-sider>
-                <n-layout-sider
-                  collapse-mode="width"
+            <n-layout has-sider>
+              <n-layout-sider
+                collapse-mode="width"
+                :collapsed-width="72"
+                :width="240"
+                show-trigger="bar"
+                bordered
+                style="height: var(--content-height)"
+                @collapse="collapsed = true"
+                @expand="collapsed = false"
+              >
+                <n-menu
+                  v-model:value="activeKey"
+                  :collapsed="collapsed"
                   :collapsed-width="72"
-                  :width="240"
-                  show-trigger="bar"
-                  bordered
-                  style="height: 88vh"
-                  @collapse="collapsed = true"
-                  @expand="collapsed = false"
+                  :collapsed-icon-size="20"
+                  :options="menuOptions"
                 >
-                  <n-menu
-                    v-model:value="activeKey"
-                    :collapsed="collapsed"
-                    :collapsed-width="72"
-                    :collapsed-icon-size="20"
-                    :options="menuOptions"
-                  >
-                  </n-menu>
-                </n-layout-sider>
-                <n-layout-content style="height: 88vh">
-                  <router-view> </router-view>
-                </n-layout-content>
-              </n-layout>
-            </n-layout-content>
-            <n-layout-footer style="height: 4vh">footer</n-layout-footer>
+                </n-menu>
+              </n-layout-sider>
+              <n-layout-content style="height: var(--content-height)" :native-scrollbar="false">
+                <router-view v-slot="{ Component, route }">
+                  <transition name="slide-fade" mode="out-in">
+                    <div :key="route.path">
+                      <component :is="Component" />
+                    </div>
+                  </transition>
+                </router-view>
+              </n-layout-content>
+            </n-layout>
+            <n-layout-footer style="height: var(--footer-height)" bordered>footer</n-layout-footer>
           </n-layout>
           <use-window-component />
         </n-loading-bar-provider>
@@ -190,7 +248,7 @@ function logout() {
 
 <style scoped>
 .g-header {
-  height: 8vh;
+  height: var(--head-height);
   border-bottom: 1px solid var(--n-border-color);
 }
 
@@ -208,7 +266,7 @@ function logout() {
   flex: 1;
 }
 .m-head-right {
-  width: 200px;
+  width: 300px;
   padding-right: var(--padding-right);
 }
 </style>

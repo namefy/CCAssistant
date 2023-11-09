@@ -4,17 +4,22 @@ export default {
     theme: {
       light: 'Light',
       dark: 'Dark'
+    },
+    size: {
+      small: 'Small',
+      medium: 'Medium',
+      large: 'Large'
     }
   },
   menu: {
     home: 'Home',
-    customer: {
-      customer: 'Customer',
+    customers: {
+      customers: 'Customers',
       customerInfo: 'Customer Info'
     },
-    setting: {
-      setting: 'Setting',
-      user:'User'
+    settings: {
+      settings: 'Settings',
+      user: 'User'
     }
   }
 }

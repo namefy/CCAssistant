@@ -4,16 +4,21 @@ export default {
     theme: {
       light: '浅色',
       dark: '深色'
+    },
+    size: {
+      small: '小',
+      medium: '中',
+      large: '大'
     }
   },
   menu: {
     home: '主页',
-    customer: {
-      customer: '客户',
+    customers: {
+      customers: '客户',
       customerInfo:'客户信息'
     },
-    setting: {
-      setting: '系统',
+    settings: {
+      settings: '系统',
       user:'用户'
     }
   }

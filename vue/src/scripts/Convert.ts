@@ -5,7 +5,7 @@ export class Convert {
   }
 
   public static CamelCase(name: string): string {
-    const SPECIAL_CHARS_REGEXP = /([\:\-\_]+(.))/g
+    const SPECIAL_CHARS_REGEXP = /([:\-_]+(.))/g
     const MOZ_HACK_REGEXP = /^moz([A-Z])/
     return name
       .replace(SPECIAL_CHARS_REGEXP, function (_, separator, letter, offset) {

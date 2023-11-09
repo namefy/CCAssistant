@@ -30,19 +30,11 @@ router.beforeEach(async (to, from) => {
     await AuthService.Login()
     return false
   }
-  if (to.path == '/') {
-    return { name: 'home', params: { theme: 'light', lang: 'zh-cn' } }
-  }
   if (to.params.theme != themeStore.param) {
     themeStore.change()
   }
   if (to.params.lang != langStore.param) {
     langStore.change()
   }
-  window.$loading?.start()
-  setTimeout(() => {
-    window.$loading?.finish()
-  }, 500)
-
   return true
 })

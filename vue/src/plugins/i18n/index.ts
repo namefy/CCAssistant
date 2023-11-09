@@ -7,7 +7,9 @@ const t = (key: string) => {
   const langStore = useLangStore()
   key = `${langStore.param}:${key}`
   return key.split(':').reduce((o, i) => {
-    if (o) return o[i]
+    if (o) {
+      return o[i]
+    }
   }, options)
 }
 

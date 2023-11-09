@@ -7,25 +7,29 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/:lang/:theme',
+      path: '/',
+      redirect: { name: 'home', params: { theme: 'light', lang: 'zh-cn' } }
+    },
+    {
+      path: '/:lang/:theme/home',
       name: 'home',
       component: HomeView
     },
     {
-      path:'',
+      path: '/:lang/:theme/customers',
       children: [
         {
-          path: '/:lang/:theme/customer',
-          name: 'customer',
+          path: '/:lang/:theme/customers/customerInfo',
+          name: 'customerInfo',
           component: CustomerView
         }
       ]
     },
     {
-      path:'',
+      path: '/:lang/:theme/settings',
       children: [
         {
-          path: '/:lang/:theme/user',
+          path: '/:lang/:theme/settings/user',
           name: 'user',
           component: UserView
         }
